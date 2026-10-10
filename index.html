@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>AXIOM 0.2 — Voice + AI Connection Setup</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#172238;--text:#edf3ff;--muted:#9eacc6;--line:#2a3752;--accent:#7cf0d3;--blue:#8eb7ff;--warn:#ffd48a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#18284a 0,#0b1020 48%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1000px;margin:auto;padding:16px}.top{display:flex;align-items:center;gap:13px;margin:10px 0 20px}.logo{width:56px;height:56px;border:1px solid #47627d;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#1d3650,#101827);font-size:29px}h1{font-size:clamp(26px,5vw,38px);margin:0;letter-spacing:1px}.sub{color:var(--muted);font-size:14px}.pill{margin-left:auto;border:1px solid #315b57;color:var(--accent);padding:6px 10px;border-radius:99px;font-size:12px}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.card{background:#121a2def;border:1px solid var(--line);border-radius:18px;padding:17px;min-width:0}h2{font-size:18px;margin:0 0 10px}p{margin:7px 0;color:var(--muted)}.faceRow{display:flex;align-items:center;gap:14px;padding:13px;background:var(--panel2);border-radius:14px}.face{width:90px;height:72px;border-radius:23px;background:#d9f6f1;display:flex;align-items:center;justify-content:center;gap:15px;flex-shrink:0;box-shadow:inset 0 -6px 0 #9bcac6}.eye{width:12px;height:21px;border-radius:99px;background:#172238}.status{color:var(--accent);font-size:13px}.small{font-size:12px;color:var(--muted)}.tag{display:inline-block;border:1px solid var(--line);padding:3px 8px;border-radius:99px;font-size:12px;color:var(--muted);margin:4px 4px 0 0}
+.chatlog{height:270px;overflow:auto;display:flex;flex-direction:column;gap:9px;padding:4px 2px 10px}.msg{max-width:92%;padding:10px 12px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere}.bot{background:#1b2942;border:1px solid #2a3c5c;align-self:flex-start}.user{background:#244b50;align-self:flex-end}.row{display:flex;gap:8px;margin-top:8px}input,textarea,button{font:inherit}input,textarea{width:100%;min-width:0;background:#0b1222;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px;outline:none}input:focus,textarea:focus{border-color:var(--blue)}button{border:0;border-radius:12px;padding:10px 13px;background:var(--accent);color:#08201e;font-weight:700;cursor:pointer}button.secondary{background:#263651;color:var(--text);border:1px solid #3a4a66}button:disabled{opacity:.5;cursor:wait}.note{border-left:3px solid var(--blue);padding:9px 11px;background:#172238;border-radius:0 10px 10px 0;font-size:13px;color:#c9d5ea;margin-top:10px}.warn{border-color:#b98d40;color:#ffe6b5}.field{margin:9px 0}.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:4px}.saved{color:var(--accent);font-size:12px}.full{grid-column:1/-1}.memory{display:flex;gap:8px;align-items:start;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}.memory span{flex:1;overflow-wrap:anywhere}.memory button{padding:3px 8px;background:#3a2732;color:#ffd9df}.footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0}
+@media(max-width:740px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.pill{display:none}.wrap{padding:12px}.chatlog{height:240px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><div class="logo">🤖</div><div><h1>AXIOM <span style="color:var(--accent)">0.2</span></h1><div class="sub">Voice prototype + secure AI connection setup</div></div><div class="pill">BUILD · TEST · IMPROVE</div></header>
+<div class="grid">
+<section class="card">
+<h2>01 / Robot status</h2>
+<div class="faceRow"><div class="face"><i class="eye"></i><i class="eye"></i></div><div><strong>AXIOM is ready for testing.</strong><div class="status" id="status">● Voice tools checking…</div><div class="small">Still a phone-based prototype; no physical robot is connected.</div></div></div>
+<p><span class="tag">Mathematics</span><span class="tag">Science</span><span class="tag">Engineering</span><span class="tag">Nigerian banter</span></p>
+<div class="note">Version 0.2 adds browser voice controls and an optional connection to a backend you control. It does not include an AI API key.</div>
+</section>
+<section class="card">
+<h2>02 / Connect an AI brain</h2>
+<p>To use a real AI, AXIOM needs a secure server/backend that accepts a message and returns a reply.</p>
+<div class="field"><label for="endpoint">Your backend chat endpoint (optional)</label><input id="endpoint" placeholder="https://your-server.example/chat" autocomplete="off"></div>
+<button id="saveEndpoint">Save endpoint</button> <span id="endpointSaved" class="saved"></span>
+<div class="note warn"><strong>Safety:</strong> Do not paste an AI secret/API key here or into this HTML file. A browser file is not a safe place for secret keys. Keep keys on a backend server. This prototype will only send chat text to the endpoint you choose.</div>
+<div class="small">Expected endpoint: accepts POST JSON <code>{"message":"..."}</code> and returns JSON like <code>{"reply":"..."}</code>. Your server must allow browser requests (CORS) if needed.</div>
+</section>
+<section class="card">
+<h2>03 / Talk to AXIOM</h2>
+<div id="chatlog" class="chatlog" aria-live="polite"><div class="msg bot">Ehen, Gabriel! I'm AXIOM 0.2. You can type, try voice input, and hear replies. A live AI brain works only after a valid secure backend is connected.</div></div>
+<div class="row"><input id="chatInput" placeholder="Type a message…" aria-label="Type a message"><button id="send">Send</button></div>
+<div class="row"><button class="secondary" id="listen">🎙️ Listen</button><button class="secondary" id="stop">Stop listening</button><button class="secondary" id="speak">🔊 Speak reply</button></div>
+<div id="voiceStatus" class="small" aria-live="polite">Voice support varies by browser. Allow microphone permission if prompted.</div>
+</section>
+<section class="card">
+<h2>04 / Project memory</h2>
+<p>Save milestones and ideas locally in this browser. Export a backup regularly.</p>
+<div class="row"><input id="memoryInput" placeholder="e.g. Make a desk-sized robot"><button id="addMemory">Save</button></div>
+<div id="memoryList"></div>
+<div class="row"><button class="secondary" id="export">Export backup</button><button class="secondary" id="clear">Clear notes</button></div>
+<div id="memoryStatus" class="saved"></div>
+</section>
+<section class="card full">
+<h2>05 / What we're building next</h2>
+<div class="note"><strong>A — AI brain:</strong> first choose a trusted AI service, then connect it through a small backend. Some services have free tiers; others require payment or an account. We'll check before choosing.</div>
+<div class="note"><strong>B — Voice:</strong> this page can use browser speech recognition and speech synthesis when your browser supports them. These features may need microphone permission and internet access.</div>
+<div class="note"><strong>Later — body:</strong> screen, microphone, speaker, then safe low-voltage electronics and movement after the software works.</div>
+</section>
+</div>
+<div class="footer">AXIOM 0.2 · No API secrets stored · Local notes may be erased if browser data is cleared.</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const K={endpoint:'axiom02_endpoint',mem:'axiom02_memories'};
+let lastReply="Ehen, Gabriel! I'm AXIOM 0.2. Let's build it one step at a time.";
+let recognition=null;
+function addMsg(t,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=t;$('chatlog').append(d);$('chatlog').scrollTop=$('chatlog').scrollHeight}
+function load(){const e=localStorage.getItem(K.endpoint);if(e)$('endpoint').value=e;renderMemories();const SR=window.SpeechRecognition||window.webkitSpeechRecognition;const speech='speechSynthesis'in window;$('status').textContent='● '+(SR?'Voice input available':'Voice input may not be supported')+' · '+(speech?'speech output available':'speech output unavailable')}
+function localReply(t){const q=t.toLowerCase();if(q.includes('how far')||q.includes('hello')||q.includes('hi'))return "I dey, Gabriel! 🤖 Ready to build. Voice is a browser feature; a live AI brain needs a secure backend.";if(q.includes('robot')||q.includes('build'))return "Our first target is a desk-sized robot. We'll get the software right first, then plan a screen, mic, speaker and safe electronics.";if(q.includes('sat')||q.includes('math')||q.includes('study'))return "Study mode! 🧠 This offline demo can't solve every problem yet. Connect a real AI backend for broader answers, or use your AI chat app for now.";if(q.includes('memory'))return "Use Project Memory to save a decision. Export a backup so your notes aren't lost if browser data is cleared.";return "I received your message. This is a demo reply because no live AI backend is connected yet. You can add your backend endpoint in the AI setup panel."}
+async function send(){const t=$('chatInput').value.trim();if(!t)return;addMsg(t,'user');$('chatInput').value='';$('send').disabled=true;let endpoint=$('endpoint').value.trim();try{if(endpoint){const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});if(!r.ok)throw new Error('Server returned HTTP '+r.status);const data=await r.json();if(typeof data.reply!=='string')throw new Error('Response should contain a text "reply" field');lastReply=data.reply;}else{lastReply=localReply(t)} }catch(e){lastReply="I couldn't reach the AI endpoint. Check the endpoint URL, server status, and CORS settings. No secret key should be placed in this page. Error: "+e.message}addMsg(lastReply,'bot');$('send').disabled=false}
+$('send').onclick=send;$('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+$('saveEndpoint').onclick=()=>{const e=$('endpoint').value.trim();if(e && !/^https?:\/\//i.test(e)){$('endpointSaved').textContent='Use a full http:// or https:// endpoint URL.';return}localStorage.setItem(K.endpoint,e);$('endpointSaved').textContent=e?'Endpoint saved in this browser ✓':'Endpoint cleared.'};
+function mems(){try{return JSON.parse(localStorage.getItem(K.mem)||'[]')}catch(e){return []}}
+function renderMemories(){const box=$('memoryList');box.innerHTML='';mems().forEach((m,i)=>{const d=document.createElement('div');d.className='memory';const s=document.createElement('span');s.textContent=m;const b=document.createElement('button');b.textContent='×';b.setAttribute('aria-label','Delete note');b.onclick=()=>{const a=mems();a.splice(i,1);localStorage.setItem(K.mem,JSON.stringify(a));renderMemories()};d.append(s,b);box.append(d)});if(!box.children.length)box.innerHTML='<div class="small">No notes saved yet.</div>'}
+$('addMemory').onclick=()=>{const t=$('memoryInput').value.trim();if(!t)return;const a=mems();a.unshift(t);localStorage.setItem(K.mem,JSON.stringify(a));$('memoryInput').value='';$('memoryStatus').textContent='Saved ✓';renderMemories()};
+$('export').onclick=()=>{const data={endpoint:$('endpoint').value.trim(),memories:mems(),exportedAt:new Date().toISOString()};const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='axiom-0.2-backup.json';a.click();URL.revokeObjectURL(url);$('memoryStatus').textContent='Backup exported ✓'};
+$('clear').onclick=()=>{if(confirm('Delete all saved AXIOM project notes from this browser? Export a backup first if you need them.')){localStorage.removeItem(K.mem);renderMemories();$('memoryStatus').textContent='Notes cleared.'}};
+$('listen').onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('voiceStatus').textContent='This browser does not support speech recognition. Try typing, or test in a compatible browser.';return}try{recognition=new SR();recognition.lang='en-NG';recognition.interimResults=false;recognition.maxAlternatives=1;recognition.onresult=e=>{$('chatInput').value=e.results[0][0].transcript;$('voiceStatus').textContent='Captured: '+e.results[0][0].transcript;send()};recognition.onerror=e=>{$('voiceStatus').textContent='Voice error: '+e.error+'. Check microphone permission or type instead.'};recognition.onend=()=>{};recognition.start();$('voiceStatus').textContent='Listening… speak now.'}catch(e){$('voiceStatus').textContent='Could not start microphone. Try browser permissions or type instead.'}};
+$('stop').onclick=()=>{if(recognition)recognition.stop();$('voiceStatus').textContent='Stopped listening.'};
+$('speak').onclick=()=>{if(!('speechSynthesis'in window)){$('voiceStatus').textContent='Speech output is not supported by this browser.';return}speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(lastReply));$('voiceStatus').textContent='Speaking last reply…'};
+load();
+</script>
+</body>
+</html>
